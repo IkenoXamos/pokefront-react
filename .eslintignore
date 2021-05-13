@@ -1,0 +1,6 @@
+*.css
+*.svg
+src/reportWebVitals.ts
+src/setupTests.ts
+src/react-app-env.d.ts
+src/index.tsx
