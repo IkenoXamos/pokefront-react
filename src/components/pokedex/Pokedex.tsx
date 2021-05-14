@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Pokemon from '../../models/Pokemon';
+import { apiGetPokemon } from '../../remote/poke-api/PokeApi';
 
 export const Pokedex: React.FC<any> = (): JSX.Element => {
   const [pokes, setPokes] = useState<Pokemon[]>([]);
@@ -20,21 +21,21 @@ export const Pokedex: React.FC<any> = (): JSX.Element => {
 
   const populateTable = (arr: Pokemon[]): JSX.Element[] => (
     arr.map((pokemon: Pokemon) => (
-      <tr key={pokemon.name}>
-        <td>{pokemon.name}</td>
-        <td>{pokemon.types[0].type.name}
+      <tr key={ pokemon.name }>
+        <td>{ pokemon.name }</td>
+        <td>{ pokemon.types[0].type.name }
           { pokemon.types.length > 1
-            && <span>, {pokemon.types[1].type.name}</span>}
+            && <span>, { pokemon.types[1].type.name }</span> }
         </td>
-        <td><img src={pokemon.sprites.front_default} alt="" /></td>
+        <td><img src={ pokemon.sprites.front_default } alt="" /></td>
       </tr>
     )));
 
   return (
     <div>
       <div className="row">
-        <input onChange={(e) => setValue(Number(e.target.value))} className="col" type="number" />
-        <button className="btn btn-primary" type="submit" onClick={() => getPokes(value)}>Favorite Pokemon</button>
+        <input onChange={ (e) => setValue(Number(e.target.value)) } className="col" type="number" />
+        <button className="btn btn-primary" type="submit" onClick={ () => { getPokes(value); apiGetPokemon(value); } }>Favorite Pokemon</button>
       </div>
 
       <div>
@@ -48,10 +49,10 @@ export const Pokedex: React.FC<any> = (): JSX.Element => {
               </tr>
             </thead>
             <tbody>
-              {populateTable(pokes)}
+              { populateTable(pokes) }
             </tbody>
           </table>
-        )}
+        ) }
       </div>
     </div>
   );

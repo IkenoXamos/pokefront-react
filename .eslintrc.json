@@ -43,6 +43,8 @@
         "import/prefer-default-export": "warn",
         "react/jsx-one-expression-per-line": "off",
         "react/prop-types": "off",
+        "key-spacing": ["error", { "beforeColon": false, "afterColon": true}],
+        "react/jsx-curly-spacing": ["error", { "when": "always" }],
         "no-useless-constructor": "off",
         "keyword-spacing": [
             "error",
