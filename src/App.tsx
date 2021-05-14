@@ -1,12 +1,32 @@
 import React from 'react';
-import Pokemon from './components/pokedex/Pokedex';
+import {
+  BrowserRouter as Router, Redirect, Route, Switch,
+} from 'react-router-dom';
+import Navbar from './components/navbar/navbar';
+import Pokedex from './components/pokedex/Pokedex';
+import Welcome from './components/welcome/Welcome';
 
-function App(): JSX.Element {
-  return (
+export const App: React.FC = (): JSX.Element => (
+  <Router>
     <div className="container">
-      <Pokemon />
+      <Navbar />
+      <Switch>
+        <Route exact path="/">
+          <Welcome />
+        </Route>
+        <Route path="/pokedex">
+          <Pokedex />
+        </Route>
+        <Route path="/welcome">
+          <Redirect to="/" />
+        </Route>
+        {/* Default route -- Redirect to welcome component */}
+        <Route path="/">
+          <Redirect to="/" />
+        </Route>
+      </Switch>
     </div>
-  );
-}
+  </Router>
+);
 
 export default App;

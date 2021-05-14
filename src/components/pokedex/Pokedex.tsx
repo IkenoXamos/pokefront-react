@@ -1,14 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import Pokemon from '../../models/Pokemon';
 
-export const Pokemon: React.FC<any> = (): JSX.Element => {
-  const [pokes, setPokes] = useState<any[]>([]);
+export const Pokedex: React.FC<any> = (): JSX.Element => {
+  const [pokes, setPokes] = useState<Pokemon[]>([]);
   const [value, setValue] = useState<number>(0);
 
   const getPokes = useCallback(async (id: number): Promise<void> => {
-    const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
-    const newPoke = await res.json();
+    if(!pokes.find((poke) => poke.id === id)) {
+      const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+      const newPoke: Pokemon = await res.json();
 
-    if(!pokes.find((poke) => poke.name === newPoke.name)) {
       setPokes((oldState) => [...oldState, newPoke]);
     }
   }, [pokes]);
@@ -17,8 +18,8 @@ export const Pokemon: React.FC<any> = (): JSX.Element => {
     getPokes(59);
   }, [getPokes]);
 
-  const populateTable = (arr: any[]): JSX.Element[] => (
-    arr.map((pokemon: any) => (
+  const populateTable = (arr: Pokemon[]): JSX.Element[] => (
+    arr.map((pokemon: Pokemon) => (
       <tr key={pokemon.name}>
         <td>{pokemon.name}</td>
         <td>{pokemon.types[0].type.name}
@@ -56,4 +57,4 @@ export const Pokemon: React.FC<any> = (): JSX.Element => {
   );
 };
 
-export default Pokemon;
+export default Pokedex;
