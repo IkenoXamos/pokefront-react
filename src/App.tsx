@@ -6,7 +6,7 @@ import {
 import Navbar from './components/navbar/Navbar';
 import Pokedex from './components/pokedex/Pokedex';
 import Welcome from './components/welcome/Welcome';
-import store from './Store';
+import store from './store';
 
 export const App: React.FC = (): JSX.Element => (
 

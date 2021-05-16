@@ -1,33 +1,42 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Pokemon from '../../models/Pokemon';
-import { apiGetPokemon } from '../../remote/poke-api/PokeApi';
+import { getPokemon } from '../../action-mappers/pokemonActionMapper';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 
-export const Pokedex: React.FC<any> = (): JSX.Element => {
-  const [pokes, setPokes] = useState<Pokemon[]>([]);
+// The 'unknown' type allows any value to be passed in as props
+// Which is fine for us, since we don't need any props
+const Pokedex: React.FC<unknown> = (): JSX.Element => {
+  // We use our 2 custom hooks
+  // The first allows us to select data from the store
+  const pokemon = useAppSelector((state) => state.pokemon);
+  // And the second gives us the ability to dispatch actions to the store
+  // Including Thunk Actions
+  const dispatch = useAppDispatch();
+
   const [value, setValue] = useState<number>(0);
 
-  const getPokes = useCallback(async (id: number): Promise<void> => {
-    if(!pokes.find((poke) => poke.id === id)) {
-      const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
-      const newPoke: Pokemon = await res.json();
-
-      setPokes((oldState) => [...oldState, newPoke]);
-    }
-  }, [pokes]);
-
   useEffect(() => {
-    getPokes(59);
-  }, [getPokes]);
+    // getPokemon is a thunk action
+    // Since it doesn't directly return an action object
+    // It is a promise of an action object
+
+    // Due to the typing of the Redux ThunkAction type
+    // We can't directly use async/await on it
+    // But we don't need to
+    // Redux-Thunk can handle that for us
+
+    dispatch(getPokemon(59));
+  }, [dispatch]);
 
   const populateTable = (arr: Pokemon[]): JSX.Element[] => (
-    arr.map((pokemon: Pokemon) => (
-      <tr key={ pokemon.name }>
-        <td>{ pokemon.name }</td>
-        <td>{ pokemon.types[0].type.name }
-          { pokemon.types.length > 1
-            && <span>, { pokemon.types[1].type.name }</span> }
+    arr.map((poke: Pokemon) => (
+      <tr key={ poke.name }>
+        <td>{ poke.name }</td>
+        <td>{ poke.types[0].type.name }
+          { poke.types.length > 1
+            && <span>, { poke.types[1].type.name }</span> }
         </td>
-        <td><img src={ pokemon.sprites.front_default } alt="" /></td>
+        <td><img src={ poke.sprites.front_default } alt="" /></td>
       </tr>
     )));
 
@@ -35,11 +44,11 @@ export const Pokedex: React.FC<any> = (): JSX.Element => {
     <div>
       <div className="row">
         <input onChange={ (e) => setValue(Number(e.target.value)) } className="col" type="number" />
-        <button className="btn btn-primary" type="submit" onClick={ () => { getPokes(value); apiGetPokemon(value); } }>Favorite Pokemon</button>
+        <button className="btn btn-primary" type="submit" onClick={ () => dispatch(getPokemon(value)) }>Favorite Pokemon</button>
       </div>
 
       <div>
-        { pokes.length === 0 || (
+        { pokemon.length === 0 || (
           <table className="table table-striped table-responsive">
             <thead>
               <tr>
@@ -49,7 +58,7 @@ export const Pokedex: React.FC<any> = (): JSX.Element => {
               </tr>
             </thead>
             <tbody>
-              { populateTable(pokes) }
+              { populateTable(pokemon) }
             </tbody>
           </table>
         ) }
