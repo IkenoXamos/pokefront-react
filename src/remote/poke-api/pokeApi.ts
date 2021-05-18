@@ -2,32 +2,20 @@
 import Pokemon from '../../models/Pokemon';
 import PokeClient from './pokeClient';
 
-export interface PokeApiResponseSuccess {
+export interface PokeApiResponse {
   status: number;
   payload: Pokemon;
 }
-
-export interface PokeApiResponseError {
-  status: number;
-  message: string;
-}
-export type PokeApiResponse = PokeApiResponseSuccess | PokeApiResponseError;
 
 // We can create a series of functions (or an object if you'd like)
 // That abstracts away the interaction with the API
 // If you're familiar with Angular, this would be our Service in a way
 export const apiGetPokemon = async (id: number | string): Promise<PokeApiResponse> => {
   const response = await PokeClient.get<Pokemon>(`/pokemon/${id}`);
+  // The axios GET request will throw an error if the request fails
+  // If you want to handle that scenario yourself, surround it with a try-catch
 
-  if(response.status === 200) {
-    return { status: response.status, payload: response.data };
-  }
-
-  if(response.status === 404) {
-    return { status: response.status, message: 'Pokemon not found' };
-  }
-
-  return { status: response.status, message: 'Failed to get Pokemon' };
+  return { status: response.status, payload: response.data };
 };
 
 // Defining these ahead of time is helpful

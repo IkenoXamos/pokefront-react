@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Pokemon from '../../models/Pokemon';
-import { getPokemon } from '../../action-mappers/pokemonActionMapper';
 import { useAppDispatch, useAppSelector } from '../../hooks';
+import { getPokemon } from '../../slices/pokemonSlice';
 
 // The 'unknown' type allows any value to be passed in as props
 // Which is fine for us, since we don't need any props
